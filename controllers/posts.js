@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js'
 
 export const getPosts = async (req, res) => {
@@ -9,8 +10,8 @@ export const getPosts = async (req, res) => {
     }
 }
 
-export const createPost = async ( req,res)=> {
-    const body = req.body;
+export const createPost = async (req, res)=> {
+    const post = req.body;
 
     const newPost = new PostMessage(post);
     try{
@@ -21,4 +22,20 @@ export const createPost = async ( req,res)=> {
 res.status(409).json({ message: error.message })
     }
  
+}
+
+
+
+export const updatePost = async (req, res) =>{
+    //extract id from req.params using object destructuring. Raname porperty {id: _id}
+    //posts/123 when using params
+    const { id: _id } = req.params
+    // receiving date for update post in req.body being sent from front end
+    const post = req.body
+    // if check to check for valid id
+    if(mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that id')
+    //new: true to receive update post async and await
+    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new:true} )
+
+    res.json(updatedPost)
 }
