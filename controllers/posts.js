@@ -33,9 +33,9 @@ export const updatePost = async (req, res) =>{
     // receiving date for update post in req.body being sent from front end
     const post = req.body
     // if check to check for valid id
-    if(mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that id')
+    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that id')
     //new: true to receive update post async and await
-    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new:true} )
+    const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new: true} )
 
     res.json(updatedPost)
 }
